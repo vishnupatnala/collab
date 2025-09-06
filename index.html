@@ -1,111 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>WhatsApp Bot Simulator</title>
-  <style>
-    body {
-      background: #ece5dd;
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-    }
-    #app {
-      max-width: 400px;
-      margin: 50px auto;
-      background: #fff;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      display: flex;
-      flex-direction: column;
-      height: 600px;
-      overflow: hidden;
-    }
-    .chat {
-      flex: 1;
-      padding: 15px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-    }
-    .message {
-      margin: 5px 0;
-      padding: 10px;
-      border-radius: 8px;
-      max-width: 70%;
-      word-wrap: break-word;
-    }
-    .user {
-      align-self: flex-end;
-      background: #dcf8c6;
-    }
-    .bot {
-      align-self: flex-start;
-      background: #f1f0f0;
-    }
-    .input-area {
-      display: flex;
-      border-top: 1px solid #ccc;
-    }
-    input {
-      flex: 1;
-      padding: 10px;
-      border: none;
-      font-size: 16px;
-    }
-    button {
-      padding: 10px 15px;
-      border: none;
-      background: #128c7e;
-      color: white;
-      cursor: pointer;
-    }
-  </style>
-</head>
-<body>
+function sendMessage() {
+  const input = document.getElementById('userInput');
+  const text = input.value.trim();
+  if (!text) return;
+  addMessage(text, 'user');
+  input.value = '';
 
-<div id="app">
-  <div class="chat" id="chat"></div>
-  <div class="input-area">
-    <input type="text" id="userInput" placeholder="Type a message...">
-    <button onclick="sendMessage()">Send</button>
-  </div>
-</div>
+  // Show typing...
+  const typingMsg = document.createElement('div');
+  typingMsg.classList.add('message', 'bot');
+  typingMsg.textContent = 'Bot is typing...';
+  chat.appendChild(typingMsg);
+  chat.scrollTop = chat.scrollHeight;
 
-<script>
-  const chat = document.getElementById('chat');
+  // Simulate delay then reply
+  setTimeout(() => {
+    chat.removeChild(typingMsg);
+    const reply = getBotReply(text);
+    addMessage(reply, 'bot');
+  }, 1000);
+}
+function getBotReply(message) {
+  message = message.toLowerCase();
 
-  function addMessage(text, sender) {
-    const msg = document.createElement('div');
-    msg.classList.add('message', sender);
-    msg.textContent = text;
-    chat.appendChild(msg);
-    chat.scrollTop = chat.scrollHeight;
+  const responses = [
+    { keyword: ['hello', 'hi'], reply: "Hi there! How can I help you?" },
+    { keyword: ['help'], reply: "Sure, I'm here to help! Ask me anything." },
+    { keyword: ['time'], reply: "Current time is: " + new Date().toLocaleTimeString() },
+    { keyword: ['bye', 'goodbye'], reply: "Goodbye! Have a nice day!" }
+  ];
+
+  for (let res of responses) {
+    if (res.keyword.some(k => message.includes(k))) {
+      return res.reply;
+    }
   }
 
-  function sendMessage() {
-    const input = document.getElementById('userInput');
-    const text = input.value.trim();
-    if (!text) return;
-    addMessage(text, 'user');
-    input.value = '';
-
-    // Simulate bot reply
-    setTimeout(() => {
-      const reply = getBotReply(text);
-      addMessage(reply, 'bot');
-    }, 600);
-  }
-
-  function getBotReply(message) {
-    message = message.toLowerCase();
-    if (message.includes('hello')) return "Hi there! How can I help you?";
-    if (message.includes('help')) return "Sure, I'm here to help! Ask me anything.";
-    if (message.includes('time')) return "Current time is: " + new Date().toLocaleTimeString();
-    if (message.includes('bye')) return "Goodbye! Have a nice day!";
-    return "Sorry, I didn't understand that. Type 'help' for assistance.";
-  }
-</script>
-
-</body>
-</html>
+  return "Sorry, I didn't understand that. Type 'help' for assistance.";
+}
+document.getElementById('userInput').focus();
+document.getElementById('userInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') sendMessage();
+});
