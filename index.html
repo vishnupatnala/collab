@@ -1,146 +1,141 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Powerhouse Tech Dashboard</title>
+  <meta charset="UTF-8">
+  <title>Mini TikTok Clone</title>
   <style>
-    body {
+    * {
+      box-sizing: border-box;
       margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: #0f0f0f;
-      color: #0ff;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
       overflow: hidden;
+      font-family: Arial, sans-serif;
+      background: #000;
     }
 
-    .container {
-      padding: 40px;
-      max-width: 1000px;
-      margin: auto;
-      text-align: center;
+    .app {
+      height: 100%;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
     }
 
-    h1 {
-      font-size: 3em;
-      margin-bottom: 10px;
-      color: #00ffff;
-      text-shadow: 0 0 20px #0ff;
-      animation: glow 2s ease-in-out infinite alternate;
+    .video-container {
+      height: 100vh;
+      position: relative;
+      scroll-snap-align: start;
+      background: #000;
     }
 
-    @keyframes glow {
-      from { text-shadow: 0 0 10px #0ff; }
-      to   { text-shadow: 0 0 30px #0ff, 0 0 10px #0ff; }
-    }
-
-    #clock {
-      font-size: 2em;
-      margin-bottom: 30px;
-    }
-
-    .panel {
-      background: rgba(0,255,255,0.05);
-      border: 1px solid #0ff;
-      border-radius: 10px;
-      padding: 20px;
-      margin: 20px auto;
-      max-width: 600px;
-      box-shadow: 0 0 10px #0ff;
-    }
-
-    .panel h2 {
-      margin: 0 0 15px;
-      font-size: 1.5em;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: #0ff;
-    }
-
-    .status {
-      display: flex;
-      justify-content: space-around;
-      flex-wrap: wrap;
-    }
-
-    .status-item {
-      margin: 10px;
-      font-size: 1.1em;
-      background: rgba(0, 255, 255, 0.1);
-      border: 1px solid #0ff;
-      padding: 10px 20px;
-      border-radius: 8px;
-    }
-
-    .footer {
-      position: absolute;
-      bottom: 10px;
+    video {
+      object-fit: cover;
       width: 100%;
+      height: 100%;
+    }
+
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      color: white;
+      width: 100%;
+      height: 100%;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      background: linear-gradient(to top, rgba(0,0,0,0.5), transparent);
+    }
+
+    .video-info {
+      margin-bottom: 20px;
+    }
+
+    .video-info h3 {
+      font-size: 18px;
+      margin-bottom: 5px;
+    }
+
+    .actions {
+      position: absolute;
+      right: 20px;
+      bottom: 100px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      font-size: 24px;
       text-align: center;
-      color: #777;
-      font-size: 0.9em;
+    }
+
+    .actions span {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .actions span:hover {
+      transform: scale(1.2);
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>⚡ Powerhouse Tech Dashboard ⚡</h1>
-    <div id="clock"></div>
 
-    <div class="panel">
-      <h2>System Status</h2>
-      <div class="status">
-        <div class="status-item">CPU Load: <span id="cpu">--%</span></div>
-        <div class="status-item">Memory Usage: <span id="memory">--%</span></div>
-        <div class="status-item">Network: <span id="network">Active</span></div>
-        <div class="status-item">AI Core: <span id="ai">Online</span></div>
+<div class="app" id="app">
+  <!-- Video 1 -->
+  <div class="video-container">
+    <video src="https://www.w3schools.com/html/mov_bbb.mp4" muted loop></video>
+    <div class="overlay">
+      <div class="video-info">
+        <h3>@cool_creator</h3>
+        <p>This is a sample TikTok-style video!</p>
       </div>
-    </div>
-
-    <div class="panel">
-      <h2>Live Logs</h2>
-      <div id="logs" style="height: 150px; overflow-y: auto; text-align: left; font-family: monospace;"></div>
+      <div class="actions">
+        <span>❤️<br>120</span>
+        <span>💬<br>34</span>
+        <span>🔗</span>
+      </div>
     </div>
   </div>
 
-  <div class="footer">Powerhouse UI Demo &copy; 2025</div>
+  <!-- Video 2 -->
+  <div class="video-container">
+    <video src="https://www.w3schools.com/html/movie.mp4" muted loop></video>
+    <div class="overlay">
+      <div class="video-info">
+        <h3>@funny_moments</h3>
+        <p>Another vertical scroll video clip.</p>
+      </div>
+      <div class="actions">
+        <span>❤️<br>452</span>
+        <span>💬<br>21</span>
+        <span>🔗</span>
+      </div>
+    </div>
+  </div>
 
-  <script>
-    function updateClock() {
-      const now = new Date();
-      document.getElementById('clock').textContent = now.toLocaleTimeString();
-    }
+  <!-- Add more videos here -->
+</div>
 
-    function fakeStatus() {
-      document.getElementById('cpu').textContent = (Math.random() * 50 + 10).toFixed(1) + '%';
-      document.getElementById('memory').textContent = (Math.random() * 70 + 20).toFixed(1) + '%';
-    }
+<script>
+  // Autoplay current video on scroll
+  const videos = document.querySelectorAll("video");
 
-    function addLog(message) {
-      const logs = document.getElementById('logs');
-      const entry = document.createElement('div');
-      entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
-      logs.appendChild(entry);
-      logs.scrollTop = logs.scrollHeight;
-    }
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.play();
+      } else {
+        entry.target.pause();
+      }
+    });
+  }, {
+    threshold: 0.6
+  });
 
-    setInterval(updateClock, 1000);
-    setInterval(fakeStatus, 2000);
-    setInterval(() => {
-      const events = [
-        "AI module initialized",
-        "User authenticated",
-        "System health check passed",
-        "Running diagnostics...",
-        "Background sync completed",
-        "New command received",
-        "Data pipeline synced"
-      ];
-      const random = events[Math.floor(Math.random() * events.length)];
-      addLog(random);
-    }, 3000);
+  videos.forEach(video => observer.observe(video));
+</script>
 
-    // Initial setup
-    updateClock();
-    fakeStatus();
-  </script>
 </body>
 </html>
