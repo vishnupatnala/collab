@@ -1,43 +1,146 @@
-function sendMessage() {
-  const input = document.getElementById('userInput');
-  const text = input.value.trim();
-  if (!text) return;
-  addMessage(text, 'user');
-  input.value = '';
-
-  // Show typing...
-  const typingMsg = document.createElement('div');
-  typingMsg.classList.add('message', 'bot');
-  typingMsg.textContent = 'Bot is typing...';
-  chat.appendChild(typingMsg);
-  chat.scrollTop = chat.scrollHeight;
-
-  // Simulate delay then reply
-  setTimeout(() => {
-    chat.removeChild(typingMsg);
-    const reply = getBotReply(text);
-    addMessage(reply, 'bot');
-  }, 1000);
-}
-function getBotReply(message) {
-  message = message.toLowerCase();
-
-  const responses = [
-    { keyword: ['hello', 'hi'], reply: "Hi there! How can I help you?" },
-    { keyword: ['help'], reply: "Sure, I'm here to help! Ask me anything." },
-    { keyword: ['time'], reply: "Current time is: " + new Date().toLocaleTimeString() },
-    { keyword: ['bye', 'goodbye'], reply: "Goodbye! Have a nice day!" }
-  ];
-
-  for (let res of responses) {
-    if (res.keyword.some(k => message.includes(k))) {
-      return res.reply;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Powerhouse Tech Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #0f0f0f;
+      color: #0ff;
+      overflow: hidden;
     }
-  }
 
-  return "Sorry, I didn't understand that. Type 'help' for assistance.";
-}
-document.getElementById('userInput').focus();
-document.getElementById('userInput').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') sendMessage();
-});
+    .container {
+      padding: 40px;
+      max-width: 1000px;
+      margin: auto;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 3em;
+      margin-bottom: 10px;
+      color: #00ffff;
+      text-shadow: 0 0 20px #0ff;
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 10px #0ff; }
+      to   { text-shadow: 0 0 30px #0ff, 0 0 10px #0ff; }
+    }
+
+    #clock {
+      font-size: 2em;
+      margin-bottom: 30px;
+    }
+
+    .panel {
+      background: rgba(0,255,255,0.05);
+      border: 1px solid #0ff;
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 600px;
+      box-shadow: 0 0 10px #0ff;
+    }
+
+    .panel h2 {
+      margin: 0 0 15px;
+      font-size: 1.5em;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #0ff;
+    }
+
+    .status {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+    }
+
+    .status-item {
+      margin: 10px;
+      font-size: 1.1em;
+      background: rgba(0, 255, 255, 0.1);
+      border: 1px solid #0ff;
+      padding: 10px 20px;
+      border-radius: 8px;
+    }
+
+    .footer {
+      position: absolute;
+      bottom: 10px;
+      width: 100%;
+      text-align: center;
+      color: #777;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>⚡ Powerhouse Tech Dashboard ⚡</h1>
+    <div id="clock"></div>
+
+    <div class="panel">
+      <h2>System Status</h2>
+      <div class="status">
+        <div class="status-item">CPU Load: <span id="cpu">--%</span></div>
+        <div class="status-item">Memory Usage: <span id="memory">--%</span></div>
+        <div class="status-item">Network: <span id="network">Active</span></div>
+        <div class="status-item">AI Core: <span id="ai">Online</span></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Live Logs</h2>
+      <div id="logs" style="height: 150px; overflow-y: auto; text-align: left; font-family: monospace;"></div>
+    </div>
+  </div>
+
+  <div class="footer">Powerhouse UI Demo &copy; 2025</div>
+
+  <script>
+    function updateClock() {
+      const now = new Date();
+      document.getElementById('clock').textContent = now.toLocaleTimeString();
+    }
+
+    function fakeStatus() {
+      document.getElementById('cpu').textContent = (Math.random() * 50 + 10).toFixed(1) + '%';
+      document.getElementById('memory').textContent = (Math.random() * 70 + 20).toFixed(1) + '%';
+    }
+
+    function addLog(message) {
+      const logs = document.getElementById('logs');
+      const entry = document.createElement('div');
+      entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+      logs.appendChild(entry);
+      logs.scrollTop = logs.scrollHeight;
+    }
+
+    setInterval(updateClock, 1000);
+    setInterval(fakeStatus, 2000);
+    setInterval(() => {
+      const events = [
+        "AI module initialized",
+        "User authenticated",
+        "System health check passed",
+        "Running diagnostics...",
+        "Background sync completed",
+        "New command received",
+        "Data pipeline synced"
+      ];
+      const random = events[Math.floor(Math.random() * events.length)];
+      addLog(random);
+    }, 3000);
+
+    // Initial setup
+    updateClock();
+    fakeStatus();
+  </script>
+</body>
+</html>
